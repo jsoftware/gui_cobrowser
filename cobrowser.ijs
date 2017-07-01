@@ -6,7 +6,7 @@ NB. hit enter in jijx window to start after running this script.
 coclass'cobrowser'
 coinsert'jhs'
 
-require '~Projects/scriptdoc.ijs'
+require '~addons/gui/cobrowser/scriptdoc.ijs'
 require '~addons/general/misc/clippaste.ijs'
 
 
