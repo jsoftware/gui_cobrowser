@@ -6,7 +6,7 @@ NB. hit enter in jijx window to start after running this script.
 coclass'cobrowser'
 coinsert'jhs'
 
-require '~addons/gui/cobrowser/scriptdoc.ijs'
+require '~Projects/scriptdoc.ijs'
 require '~addons/general/misc/clippaste.ijs'
 
 
@@ -270,11 +270,11 @@ button.ui-button-icon-only
 .ui-menu-item-wrapper {
     font-family: courier new,courier,monospace;
 }
-#menu0{ width: 150px; height: 200px; overflow: auto; overflow-y: scroll }
-#menu1{ width: 230px; height: 200px; overflow: auto; overflow-y: scroll  }
+#menu0{ width: 150px; height: 200px; overflow: scroll; overflow-y: scroll }
+#menu1{ width: 230px; height: 200px; overflow: scroll; overflow-y: scroll  }
 #menu2{ width: 100px; height: 200px }
-#menu3{ width: 300px; height: 400px;overflow: auto; overflow-y: scroll  }
-#textdisp{ width: 480px; height: 195px;overflow: auto; overflow-y: scroll }
+#menu3{ width: 300px; height: 400px;overflow: scroll; overflow-y: scroll  }
+#textdisp{ width: 480px; height: 195px;overflow: scroll; overflow-y: scroll }
 #stspace{ width:50; text-align:right }
 #stscript{ font-size: 0.7em }
 .positionDiv {
