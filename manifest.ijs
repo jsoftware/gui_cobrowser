@@ -8,7 +8,7 @@ cobrowse - famous SmallTalk tool for J
 
 LABCATEGORY=: 'GUI'
 
-VERSION=: '2.0.3'
+VERSION=: '2.0.4'
 
 RELEASE=: 'j804 j805 j806'
 

@@ -14,7 +14,6 @@ require '~addons/general/misc/clippaste.ijs'
 'cobrowser'cojhs ''
 )
 
-NB.* jhclose*jhclose'' - cojhs close button and spacer
 jhclose=: 3 : 0
 'close'jhb'X'
 )
@@ -22,6 +21,7 @@ jhclose=: 3 : 0
 TITLE=: 'Class Browser'
 TYPES=: ;:'Noun Adverb Conj Verb All'
 
+NB.* jhclose*jhclose'' - cojhs close button and spacer
 create=: 3 : 0
 9!:7 '+++++++++|-'
 shown=: 0
@@ -246,6 +246,9 @@ eview
 stshape
 stspace
 stscript
+'<div id="resizer" class="ui-widget-content ui-corner-all positionDiv">'
+'<span class="ui-icon ui-icon-grip-diagonal-se"></span>'
+'</div>'
 )
 
 CSS=: 0 : 0
@@ -258,8 +261,8 @@ textarea {
 }
 button.ui-button-icon-only
 {
-    width: 32px !important;
-    height: 32px !important;
+ width: 32px !important;
+ height: 32px !important;
 }
 #close{ padding-left:3px }
 /* jQuery UI theme settings */
@@ -280,6 +283,7 @@ button.ui-button-icon-only
 .positionDiv {
 position: absolute;
 }
+#resizer{ text-align:right }
 )
 
 jev_get=: 3 : 0
@@ -287,6 +291,18 @@ title jhrx (getcss''),(getjs ''),gethbs'NAME TEXT';'data';'<p class=jcode positi
 )
 
 JS=: 0 : 0
+// Firefox 1.0+
+var isFirefox = typeof InstallTrigger !== 'undefined';
+// Internet Explorer 6-11
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+var cowdi= [ 150, 230, 100, 300, 480 ];
+var cohti= [ 200, 200, 200, 400, 195 ];
+var cowd= [ 150, 230, 100, 300, 480 ];
+var coht= [ 200, 200, 200, 400, 195 ];
+
+var sizenames= [ "#menu0",  "#menu1",  "#menu2",  "#menu3",  "#textdisp" ];
+
 function jevdo()
 {
 // Modified for Firefox and NonFirefox and jQueryUI
@@ -433,72 +449,21 @@ function ev_menu3_menuselect_ajax(ts) {
 
 function menuselect( t, e, ui ) {
         
-    // Remove the highlight class from any existing items.
-    t.find( "a.ui-state-highlight" )
-             .removeClass( "ui-state-highlight" );
- 
-    // Adds the "ui-state-highlight" class to the selected item.
-    ui.item.find( "> a" )
-           .addClass( "ui-state-highlight ui-corner-all" );    
-           
-    // Calls ev_menu0_select 
-    var d = ui.item.index();
-    jform.index = d+1; // bug in later || with 0
-    jev(e);
+ // Remove the highlight class from any existing items.
+ t.find( "a.ui-state-highlight" )
+        .removeClass( "ui-state-highlight" );
+
+ // Adds the "ui-state-highlight" class to the selected item.
+ ui.item.find( "> a" )
+        .addClass( "ui-state-highlight ui-corner-all" );    
+        
+ // Calls ev_menu0_select 
+ var d = ui.item.index();
+ jform.index = d+1; // bug in later || with 0
+ jev(e);
 }
     
-function ev_body_load(){
- // Firefox 1.0+
- var isFirefox = typeof InstallTrigger !== 'undefined';
- // Internet Explorer 6-11
- var isIE = /*@cc_on!@*/false || !!document.documentMode;
-
- var basicControls = [ "#refresh", "#open", "#scriptdoc", "#copyname", "#copypath" ];
- $( basicControls.join(", ") ).on( "click change selectmenuchange",this.id,jev );
-
- if (isIE) {
-  $( "#close" ).css({ "font-size":"12px" });
- }
- 
- $( "#refresh" ).button({
-  icon: "ui-icon-refresh",
-  showLabel: false
- });
- $( "#open" ).button({
-  icon: "ui-icon-folder-open",
-  showLabel: false
- });
- $( "#scriptdoc" ).button({
-  icon: "ui-icon-help",
-  showLabel: false
- });
- $( "#copyname" ).button({
-  icon: "ui-icon-copy",
-  showLabel: false
- });
- $( "#copypath" ).button({
-  icon: "ui-icon-link",
-  showLabel: false
- });
- $( ".toolbar" ).controlgroup();
-
- $( "#menu0" ).menu({       
-     select: function( e, ui ) { menuselect( $( this ), e, ui ); }
- });
- $( "#menu0" ).find( "a:eq(0)" ).addClass( "ui-state-highlight ui-corner-all" );
- $( "#menu1" ).menu({
-      select: function( e, ui ) { menuselect( $( this ), e, ui ); }
- });
- $( "#menu1" ).find( "a:eq(0)" ).addClass( "ui-state-highlight ui-corner-all" );
- $( "#menu2" ).menu({
-      select: function( e, ui ) { menuselect( $( this ), e, ui ); }
- });
- $( "#menu2" ).find( "a:eq(4)" ).addClass( "ui-state-highlight ui-corner-all" );
- $( "#menu3" ).menu({
-      select: function( e, ui ) { menuselect( $( this ), e, ui ); }
- });
- $( "#menu3" ).find( "a:eq(0)" ).addClass( "ui-state-highlight ui-corner-all" );
- 
+function positioner() {
  $( ".toolbar" ).position({
   my: "left top",
   at: "left+3 bottom",
@@ -582,17 +547,114 @@ function ev_body_load(){
   at: "right top+3",
   of: "#close"
  });
+ $( "#resizer" ).position({
+  my: "left top",
+  at: "right bottom",
+  of: "#menu3"
+ });
+}
 
+function ev_body_load(){
+
+ var basicControls = [ "#refresh", "#open", "#scriptdoc", "#copyname", "#copypath" ];
+ $( basicControls.join(", ") ).on( "click change selectmenuchange",this.id,jev );
+
+ if (isIE) {
+  $( "#close" ).css({ "font-size":"12px" });
+ }
+ 
+ var pos1 = [ 0, 0, 0 ];
+ var pos2 = [ 0, 0, 0 ];
+ var firstpos;
+ var gotpos = 0;
+ var deltap;
+ var resizepos;
+ 
+ $( "#resizer" ).draggable({
+  start: function(ev,ui) {
+   updateCounterStatus( 0, ui.position );
+ },
+ drag: function(ev,ui) {
+   updateCounterStatus( 1, ui.position );
+ },
+ stop: function(ev,ui) {
+   updateCounterStatus( 2, ui.position );
+   deltap = [ (pos1[2]-firstpos.left), (pos2[2]-firstpos.top) ];
+   if ( (pos1[2] < firstpos.left) || (pos2[2] < firstpos.top) ) {
+    resizepos= "right+"+firstpos.left.text+" bottom+"+firstpos.top.text;
+    deltap= [ 0, 0 ];
+    $( "#resizer" ).position({
+      my: "left top",
+      at: resizepos,
+      of: "#menu3"
+    });
+   } 
+   deltap = [ 1+deltap[0]/firstpos.left, 1+deltap[1]/firstpos.top ];
+   for ( var i = 0; i < 5; i++ ) {    
+    $( sizenames[i] ).css({ "width": deltap[0]*cowd[i] });
+    $( sizenames[i] ).css({ "height": deltap[1]*coht[i] });
+   }
+   positioner();
+ } 
+ });
+    
+ function updateCounterStatus( i, pos ) {
+  if (gotpos == 0) {
+   firstpos= pos;
+   gotpos= 1;
+  }
+  pos1[i]= pos.left;
+  pos2[i]= pos.top;
+ }
+
+ $( "#refresh" ).button({
+  icon: "ui-icon-refresh",
+  showLabel: false
+ });
+ $( "#open" ).button({
+  icon: "ui-icon-folder-open",
+  showLabel: false
+ });
+ $( "#scriptdoc" ).button({
+  icon: "ui-icon-help",
+  showLabel: false
+ });
+ $( "#copyname" ).button({
+  icon: "ui-icon-copy",
+  showLabel: false
+ });
+ $( "#copypath" ).button({
+  icon: "ui-icon-link",
+  showLabel: false
+ });
+ $( ".toolbar" ).controlgroup();
+
+ $( "#menu0" ).menu({       
+     select: function( e, ui ) { menuselect( $( this ), e, ui ); }
+ });
+ $( "#menu0" ).find( "a:eq(0)" ).addClass( "ui-state-highlight ui-corner-all" );
+ $( "#menu1" ).menu({
+      select: function( e, ui ) { menuselect( $( this ), e, ui ); }
+ });
+ $( "#menu1" ).find( "a:eq(0)" ).addClass( "ui-state-highlight ui-corner-all" );
+ $( "#menu2" ).menu({
+      select: function( e, ui ) { menuselect( $( this ), e, ui ); }
+ });
+ $( "#menu2" ).find( "a:eq(4)" ).addClass( "ui-state-highlight ui-corner-all" );
+ $( "#menu3" ).menu({
+      select: function( e, ui ) { menuselect( $( this ), e, ui ); }
+ });
+ $( "#menu3" ).find( "a:eq(0)" ).addClass( "ui-state-highlight ui-corner-all" );
+ positioner();
 }
 )
 
 INC=: 0 : 0
 ~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
-~addons/gui/cobrowser/jquery-ui-1.12.1.hc2-custom/jquery-ui.min.css
-~addons/gui/cobrowser/jquery-ui-1.12.1.hc2-custom/jquery-ui.theme.min.css
-~addons/gui/cobrowser/jquery-ui-1.12.1.hc2-custom/jquery-3.2.1.min.js
-~addons/gui/cobrowser/jquery-ui-1.12.1.hc2-custom/jquery-ui.min.js
+~addons/gui/cobrowser/jquery-ui-1.12.1hcr1.custom/jquery-ui.min.css
+~addons/gui/cobrowser/jquery-ui-1.12.1hcr1.custom/jquery-ui.theme.min.css
+~addons/gui/cobrowser/jquery-ui-1.12.1hcr1.custom/jquery-3.2.1.min.js
+~addons/gui/cobrowser/jquery-ui-1.12.1hcr1.custom/jquery-ui.min.js
 )
 
 'cobrowser'cojhs ''
-
