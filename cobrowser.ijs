@@ -295,17 +295,30 @@ JS=: 0 : 0
 var isFirefox = typeof InstallTrigger !== 'undefined';
 // Internet Explorer 6-11
 var isIE = /*@cc_on!@*/false || !!document.documentMode;
+// Edge 20+
+var isEdge = !isIE && !!window.StyleMedia;
+// Chrome 1+
+var isChrome = !!window.chrome && !!window.chrome.webstore;
+
 
 var cowdi= [ 150, 230, 100, 300, 480 ];
 var cohti= [ 200, 200, 200, 400, 195 ];
 var cowd= [ 150, 230, 100, 300, 480 ];
 var coht= [ 200, 200, 200, 400, 195 ];
 
+if (isIE || isChrome ) {
+ cohti[4] = 211;
+ coht[4] = 211;
+}
+
 var sizenames= [ "#menu0",  "#menu1",  "#menu2",  "#menu3",  "#textdisp" ];
 
 function jevdo()
 {
 // Modified for Firefox and NonFirefox and jQueryUI
+ if (jform.jmid.value == '') {
+  return false;  // for Edge and Chrome
+ }
  var jfmv= jform.jmid.value.substring(0,6);
  if('ui-id-' == jfmv && jform.jtype.value == 'click' ) 
  {
@@ -459,7 +472,7 @@ function menuselect( t, e, ui ) {
         
  // Calls ev_menu0_select 
  var d = ui.item.index();
- jform.index = d+1; // bug in later || with 0
+ jform.index = d+1; // bug in later || with 0 
  jev(e);
 }
     
@@ -479,7 +492,7 @@ function positioner() {
   at: "left bottom",
   of: "#menu0h"
  });
- if ( isFirefox  ) {
+ if ( isFirefox ) {
  $( "#menu1" ).position({
   my: "left top",
   at: "right top",
@@ -491,16 +504,29 @@ function positioner() {
   of: "#menu1"
  });
 } else {
+ if ( isEdge ) {
  $( "#menu1" ).position({
   my: "left top",
-  at: "right+17 top",
+  at: "right+12 top",
   of: "#menu0"
  });
  $( "#menu2" ).position({
   my: "left top",
-  at: "right+17 top",
+  at: "right+12 top",
   of: "#menu1"
  });
+  } else {
+   $( "#menu1" ).position({
+    my: "left top",
+    at: "right+17 top",
+    of: "#menu0"
+   });
+   $( "#menu2" ).position({
+    my: "left top",
+    at: "right+17 top",
+    of: "#menu1"
+   });
+  }
  }
   $( "#menu3" ).position({
   my: "left top",
@@ -522,11 +548,36 @@ function positioner() {
   at: "left top",
   of: "#menu3"
  });
+ if ( isEdge ) {
+ $( "#textdisp" ).position({
+  my: "left top",
+  at: "left bottom+12",
+  of: "#menu0"
+ });
+ } else {
  $( "#textdisp" ).position({
   my: "left top",
   at: "left bottom",
   of: "#menu0"
  });
+ }
+ if ( isIE || isEdge || isChrome ) {
+ $( "#stshape" ).position({
+  my: "left top",
+  at: "left bottom+17",
+  of: "#menu3"
+ });
+ $( "#stspace" ).position({
+  my: "right top",
+  at: "right-50 bottom+17",
+  of: "#menu3"
+ });
+ $( "#stscript" ).position({
+  my: "left top",
+  at: "left bottom+17",
+  of: "#textdisp"
+ });
+ } else {
  $( "#stshape" ).position({
   my: "left top",
   at: "left bottom",
@@ -542,16 +593,25 @@ function positioner() {
   at: "left bottom",
   of: "#textdisp"
  });
+ }
  $( "#data" ).position({
   my: "left top",
   at: "right top+3",
   of: "#close"
  });
+if ( isFirefox ) {
+ $( "#resizer" ).position({
+  my: "left top",
+  at: "right-15 bottom-15",
+  of: "#menu3"
+ });
+} else {
  $( "#resizer" ).position({
   my: "left top",
   at: "right bottom",
   of: "#menu3"
  });
+}
 }
 
 function ev_body_load(){
@@ -559,8 +619,9 @@ function ev_body_load(){
  var basicControls = [ "#refresh", "#open", "#scriptdoc", "#copyname", "#copypath" ];
  $( basicControls.join(", ") ).on( "click change selectmenuchange",this.id,jev );
 
- if (isIE) {
+ if (isIE || isChrome ) {
   $( "#close" ).css({ "font-size":"12px" });
+  $( "#textdisp" ).css({ "height" : "211" });
  }
  
  var pos1 = [ 0, 0, 0 ];
