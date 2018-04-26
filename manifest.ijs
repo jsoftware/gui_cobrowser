@@ -10,7 +10,9 @@ LABCATEGORY=: 'GUI'
 
 VERSION=: '2.0.9'
 
-RELEASE=: 'j804 j805 j806 j807'
+RELEASE=: ''
+
+FOLDER=: 'gui/cobrowser'
 
 PLATFORMS=: ''
 
