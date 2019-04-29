@@ -8,7 +8,7 @@ cobrowse - famous SmallTalk tool for J
 
 LABCATEGORY=: 'GUI'
 
-VERSION=: '2.0.9'
+VERSION=: '2.1.0'
 
 RELEASE=: ''
 
@@ -18,7 +18,10 @@ PLATFORMS=: ''
 
 FILES=: 0 : 0
 cobrowser.ijs
+cobrowser-jhs.ijs
+cobrowser-jqt.ijs
 manifest.ijs
 scriptdoc.ijs
 jquery-ui-1.12.1.hc2-custom/
+bin/
 )
