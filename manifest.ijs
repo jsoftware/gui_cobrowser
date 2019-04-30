@@ -8,7 +8,7 @@ cobrowse - famous SmallTalk tool for J
 
 LABCATEGORY=: 'GUI'
 
-VERSION=: '2.1.0'
+VERSION=: '2.1.1'
 
 RELEASE=: ''
 
@@ -22,6 +22,8 @@ cobrowser-jhs.ijs
 cobrowser-jqt.ijs
 manifest.ijs
 scriptdoc.ijs
+LICENSE
+LICENSE-Material-Design-Icons
 jquery-ui-1.12.1.hc2-custom/
 bin/
 )
