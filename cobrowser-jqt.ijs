@@ -15,10 +15,12 @@ NB. 2019/04/28 David Mitchell
 
 IFJ6_z_ =: +./ 'j60' E. JVERSION
 
+require IFJ6#'gtkwd jzgrid coutil scriptdoc strings'
+
 coclass 'pcobrowse'
 
-require '~addons/gui/cobrowser/scriptdoc.ijs'
-require '~addons/general/misc/clippaste.ijs'
+require (-.IFJ6)#'~addons/gui/cobrowser/scriptdoc.ijs'
+require (-.IFJ6)#'~addons/general/misc/clippaste.ijs'
 
 F=: 0 : 0
 pc f;
@@ -95,6 +97,11 @@ create=: 3 : 0
   wd 'setfont eview ','"Consolas" 10'
   wd 'pshow'
   
+  CURLOC=: <'base'
+  CURINST=: ''
+  CURTYPE=: <'All'
+  CURNAME=: ''
+
   if. IFJ6 do. 
     makegrid 'gloc' 
     HDRCOL__gloc=: <'Locales'
@@ -116,11 +123,6 @@ create=: 3 : 0
     wd 'set gtype select 4'
   end.
 
-  CURLOC=: <'base'
-  CURINST=: ''
-  CURTYPE=: <'All'
-  CURNAME=: ''
-  
   gloc_update ''
   ginst_update ''
 
