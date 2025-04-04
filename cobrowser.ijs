@@ -19,7 +19,6 @@ require IFJ6#'gtkwd jzgrid coutil scriptdoc strings'
 
 coclass 'pcobrowse'
 
-require (-.IFJ6)#'~addons/gui/cobrowser/scriptdoc.ijs'
 require (-.IFJ6)#'~addons/general/misc/clippaste.ijs'
 
 F=: 0 : 0
